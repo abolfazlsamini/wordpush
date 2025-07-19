@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Telegram Web App</title>
-  <script src="https://unpkg.com/vue@3"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
+      text-align: center;
     }
     button {
       padding: 10px 20px;
@@ -17,49 +17,45 @@
       border: none;
       cursor: pointer;
     }
+    #telegram-content, #prompt-message {
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
-  <div id="app"></div>
+  <div id="app">
+    <div id="telegram-content" style="display: none;">
+      <p>User ID: <span id="user-id"></span></p>
+      <button id="send-data">Send Data</button>
+    </div>
+    <div id="prompt-message" style="display: none;">
+      <p>Please open this page within Telegram.</p>
+    </div>
+  </div>
   <script>
-    const { createApp } = Vue;
-    createApp({
-      data() {
-        return {
-          isTelegram: false,
-          userId: null
-        };
-      },
-      mounted() {
-        if (window.Telegram && window.Telegram.WebApp) {
-          this.isTelegram = true;
-          const urlParams = new URLSearchParams(window.location.search);
-          this.userId = urlParams.get('user_id');
-          // Optionally, verify initData
-        } else {
-          this.isTelegram = false;
-        }
-      },
-      methods: {
-        sendData() {
-          if (this.isTelegram) {
-            const data = JSON.stringify({action: "button_clicked", data: "Hello from web app"});
-            window.Telegram.WebApp.sendData(data);
-          }
-        }
-      },
-      template: `
-        <div>
-          <div v-if="isTelegram">
-            <p>User ID: {{ userId }}</p>
-            <button @click="sendData">Send Data</button>
-          </div>
-          <div v-else>
-            <p>Please open this page within Telegram.</p>
-          </div>
-        </div>
-      `
-    }).mount('#app');
+    document.addEventListener('DOMContentLoaded', function() {
+      const telegramContent = document.getElementById('telegram-content');
+      const promptMessage = document.getElementById('prompt-message');
+      const userIdSpan = document.getElementById('user-id');
+      const sendDataButton = document.getElementById('send-data');
+
+      if (window.Telegram && window.Telegram.WebApp) {
+        telegramContent.style.display = 'block';
+        promptMessage.style.display = 'none';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('user_id');
+        userIdSpan.textContent = userId || 'Not provided';
+
+        sendDataButton.addEventListener('click', function() {
+          const data = JSON.stringify({ action: "button_clicked", data: "Hello from web app" });
+          window.Telegram.WebApp.sendData(data);
+        });
+      } else {
+        telegramContent.style.display = 'none';
+        promptMessage.style.display = 'block';
+      }
+    });
   </script>
 </body>
 </html>
