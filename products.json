@@ -12,13 +12,14 @@
   },
   {
     "id": "2",
-    "name": "dd",
+    "name": "watch",
     "description": "Fitness tracker with heart rate monitor",
     "price": 129.99,
     "details": "Stay connected and track your fitness goals...",
     "images": [
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
-      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a"
+      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a",
+      "https://raw.githubusercontent.com/abolfazlsamini/wordpush/gh-pages/public/images/image-1752930195616.jpg"
     ]
   }
 ]
