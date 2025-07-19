@@ -1,14 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/wordpush/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + Vue</title>
-    <script type="module" crossorigin src="/wordpush/assets/index-CbmhKVcM.js"></script>
-    <link rel="stylesheet" crossorigin href="/wordpush/assets/index-DjTe51fE.css">
-  </head>
-  <body>
-    <div id="app"></div>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Web App</title>
+  <script src="https://unpkg.com/vue@3"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #0088cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          isTelegram: false,
+          userId: null
+        };
+      },
+      mounted() {
+        if (window.Telegram && window.Telegram.WebApp) {
+          this.isTelegram = true;
+          const urlParams = new URLSearchParams(window.location.search);
+          this.userId = urlParams.get('user_id');
+          // Optionally, verify initData
+        } else {
+          this.isTelegram = false;
+        }
+      },
+      methods: {
+        sendData() {
+          if (this.isTelegram) {
+            const data = JSON.stringify({action: "button_clicked", data: "Hello from web app"});
+            window.Telegram.WebApp.sendData(data);
+          }
+        }
+      },
+      template: `
+        <div>
+          <div v-if="isTelegram">
+            <p>User ID: {{ userId }}</p>
+            <button @click="sendData">Send Data</button>
+          </div>
+          <div v-else>
+            <p>Please open this page within Telegram.</p>
+          </div>
+        </div>
+      `
+    }).mount('#app');
+  </script>
+</body>
 </html>
